@@ -41,7 +41,8 @@ babel-node --stage 1 --optional strict -- index.js --syncServer=127.0.0.1
 ```
 
 ## Examples
-(1) Create a new directory
+###(1) Create a new directory
+
 Open a new terminal and:
 ```
 cd dropbox-demo
@@ -87,7 +88,8 @@ Received message from SYNC server:
 Created directory: /Users/yzhu02/yzhu/trainings/nodejs/dropbox-demo/dropbox-client/foo
 ```
 
-(2) Delete an existing directory
+### (2) Delete an existing directory
+
 Open a new terminal and:
 ```
 cd dropbox-demo
@@ -133,7 +135,8 @@ Received message from SYNC server:
 Deleted directory: /Users/yzhu02/yzhu/trainings/nodejs/dropbox-demo/dropbox-client/foo
 ```
 
-(3) Create a new file
+### (3) Create a new file
+
 Open a new terminal and:
 ```
 cd dropbox-demo
@@ -203,7 +206,8 @@ Hello Dropboxyzhu02-mac:dropbox-demo yzhu02$
 ```
 
 
-(4) Update an existing file
+### (4) Update an existing file
+
 Open a new terminal and:
 ```
 cd dropbox-demo
@@ -270,9 +274,10 @@ Shows:
 ```
 yzhu02-mac:dropbox-demo yzhu02$ cat dropbox-client/foo/bar.js
 Hello Node.js yzhu02-mac:dropbox-demo yzhu02$
+```
 
+### (5) Delete an existing file
 
-(5) Delete an existing file
 Open a new terminal and:
 ```
 cd dropbox-demo
