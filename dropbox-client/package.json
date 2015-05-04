@@ -1,0 +1,21 @@
+{
+  "name": "dropbox-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node --stage 1 --optional strict -- index.js",
+    "demonstart": "nodemon --exec babel-node -- --stage 1 --optional strict -- index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-socket": "^0.1.2",
+    "mkdir": "0.0.2",
+    "mkdirp": "^0.5.0",
+    "rimraf": "^2.3.3",
+    "songbird": "^1.0.1",
+    "yargs": "^3.8.0"
+  }
+}
