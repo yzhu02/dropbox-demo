@@ -29,15 +29,16 @@ if (NODE_ENV === 'dev') {
 
 
 
-let syncSocket = null // This can be maintained as array to be able to sync to multiple clients
+let syncSockets = []
 let syncServer = net.createServer()
 syncServer.listen(SYNC_PORT, () => console.log(`TCP SYNC SERVER LISTENING @ http://127.0.0.1:${SYNC_PORT}`))
 syncServer.on('connection', function(socket) { //TODO: How do use Promise style? Tried but not working
-    syncSocket = new JsonSocket(socket)
+    let syncSocket = new JsonSocket(socket)
     console.log('SYNC client connected from ' + socket.remoteAddress + ':' + socket.remotePort)
     syncSocket.on('message', function(message) {
         console.log('Received message from ' + socket.remoteAddress + ': ' + message)
     })
+    syncSockets.push(syncSocket)
 })
 // syncServer.promise.on('connection')
 // .then(socket => {
@@ -50,7 +51,7 @@ syncServer.on('connection', function(socket) { //TODO: How do use Promise style?
 // .catch(e => console.log(e.stack))
 
 function pushSyncAction(action, type, path, content) {
-	if (!syncSocket) {
+	if (!syncSockets) {
 		console.log('No connected SYNC client available.')
 		return
 	}
@@ -61,12 +62,16 @@ function pushSyncAction(action, type, path, content) {
     	"content": content,
     	"timestamp": Date.now()
 	}
-	syncSocket.sendMessage(actionMessage, err => {
-		if (err) {
-			console.log(err)
+	for (let syncSocket of syncSockets) {
+		if (syncSocket) {
+			syncSocket.sendMessage(actionMessage, err => {
+				if (err) {
+					console.log(err)
+				}
+			})
+			console.log('Sent action message to connected SYNC client:\n ' + JSON.stringify(actionMessage))
 		}
-	})
-	console.log('Sent action message to connected SYNC client:\n ' + JSON.stringify(actionMessage))
+	}
 }
 
 
