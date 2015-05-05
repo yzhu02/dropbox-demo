@@ -36,7 +36,15 @@ syncServer.on('connection', function(socket) { //TODO: How do use Promise style?
     let syncSocket = new JsonSocket(socket)
     console.log('SYNC client connected from ' + socket.remoteAddress + ':' + socket.remotePort)
     syncSocket.on('message', function(message) {
-        console.log('Received message from ' + socket.remoteAddress + ': ' + message)
+        console.log('Received message from ' + socket.remoteAddress + ': ' + socket.remotePort + ': ' + message)
+    })
+    syncSocket.on('close', function() {
+    	console.log('Closed ' + socket.remoteAddress + ': ' + socket.remotePort)
+    	for (let i=0; i<syncSockets.length; ++i) {
+    		if (syncSockets[i] === syncSocket) {
+    			syncSockets.splice(i, 1)
+    		}
+    	}
     })
     syncSockets.push(syncSocket)
 })
@@ -64,12 +72,16 @@ function pushSyncAction(action, type, path, content) {
 	}
 	for (let syncSocket of syncSockets) {
 		if (syncSocket) {
-			syncSocket.sendMessage(actionMessage, err => {
-				if (err) {
-					console.log(err)
-				}
-			})
-			console.log('Sent action message to connected SYNC client:\n ' + JSON.stringify(actionMessage))
+			try {
+				syncSocket.sendMessage(actionMessage, err => {
+					if (err) {
+						console.log(err)
+					}
+				})
+				console.log('Sent action message to connected SYNC client:\n ' + JSON.stringify(actionMessage))
+			} catch (e) {
+				console.log(e.stack)
+			}
 		}
 	}
 }
