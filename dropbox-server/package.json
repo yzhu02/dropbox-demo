@@ -13,6 +13,7 @@
   "dependencies": {
     "bluebird": "^2.9.25",
     "bluebird-nodeify": "^1.0.0",
+    "chokidar": "^1.0.1",
     "express": "^4.12.3",
     "json-socket": "^0.1.2",
     "longjohn": "^0.2.4",

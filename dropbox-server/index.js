@@ -11,6 +11,8 @@ let mkdirp = require('mkdirp')
 let net = require('net')
 let JsonSocket = require('json-socket')
 
+let chokidar = require('chokidar')
+
 require('songbird')
 
 const NODE_ENV = process.env.NODE_ENV
@@ -30,7 +32,7 @@ if (NODE_ENV === 'dev') {
 let syncSocket = null // This can be maintained as array to be able to sync to multiple clients
 let syncServer = net.createServer()
 syncServer.listen(SYNC_PORT, () => console.log(`TCP SYNC SERVER LISTENING @ http://127.0.0.1:${SYNC_PORT}`))
-syncServer.on('connection', function(socket) {
+syncServer.on('connection', function(socket) { //TODO: How do use Promise style? Tried but not working
     syncSocket = new JsonSocket(socket)
     console.log('SYNC client connected from ' + socket.remoteAddress + ':' + socket.remotePort)
     syncSocket.on('message', function(message) {
@@ -167,3 +169,41 @@ function sendHeaders(req, res, next) {
 		res.setHeader('Content-Type', contentType)
 	}(), next)
 }
+
+//TODO: Why to use Promise style here? tried but not working
+let watcher = chokidar.watch(ROOT_DIR, {
+  ignored: /[\/\\]\./,
+  persistent: true
+})
+ 
+watcher
+	.on('add', function(path) {
+		//console.log(path + ' file added')
+		//TODO: call synToAddFile() here
+	})
+	.on('change', function(path) {
+		//console.log(path + ' file changed')
+		//TODO: call syncToUpdateFile() here
+	})
+	.on('unlink', function(path) {
+		//console.log(path + ' file unlinked')
+		//TODO: call syncToDeleteFile() here
+	})
+	.on('addDir', function(path) {
+		//console.log(path + ' dir added')
+		//TODO: call syncToAddDir() here
+	})
+	.on('unlinkDir', function(path) {
+		//console.log(path + ' dir removed')
+		//TODO: call syncToDeleteDir() here
+	})
+	.on('error', function(error) {
+		//console.log(error)
+	})
+	.on('ready', function() {
+		//console.log('Initial scan complete. Ready for changes.')
+	})
+	.on('raw', function(event, path, details) {
+		//console.log('Raw event info: ')
+	})
+
